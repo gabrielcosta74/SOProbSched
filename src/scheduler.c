@@ -101,19 +101,21 @@ void run_fcfs(ProcessQueue* queue) {
 
     printf("\n[FCFS] Escalonamento:\n");
     for (int i = 0; i < queue->size; i++) {
-        Process p = queue->list[i];
-        if (current_time < p.arrival_time)
-            current_time = p.arrival_time;
+    Process p = queue->list[i];
+    if (current_time < p.arrival_time)
+        current_time = p.arrival_time;
 
-        int wait_time = current_time - p.arrival_time;
-        int turnaround = wait_time + p.burst_time;
-        current_time += p.burst_time;
+    int wait_time = current_time - p.arrival_time;
+    int turnaround = wait_time + p.burst_time;
+    current_time += p.burst_time;
 
-        printf("Processo %d: Espera = %d, Turnaround = %d\n", p.id, wait_time, turnaround);
+    printf("Processo %d: chegada = %d, Espera = %d, Turnaround = %d\n",
+           p.id, p.arrival_time, wait_time, turnaround);
 
-        total_wait += wait_time;
-        total_turnaround += turnaround;
-    }
+    total_wait += wait_time;
+    total_turnaround += turnaround;
+}
+
 
     printf("Média de espera: %.2f\n", (float)total_wait / queue->size);
     printf("Média de turnaround: %.2f\n", (float)total_turnaround / queue->size);

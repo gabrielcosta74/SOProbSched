@@ -7,7 +7,7 @@ BIN = bin/probsched
 all: $(BIN)
 
 $(BIN): $(SRC)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 clean:
 	rm -f $(BIN) *.o

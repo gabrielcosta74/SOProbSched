@@ -28,21 +28,28 @@ void add_process(ProcessQueue* queue, Process proc) {
 }
 
 Process generate_random_process(int id, int current_time) {
+    static int cumulative_arrival = 0; // mantém tempo de chegada cumulativo
     Process p;
+
+    int inter_arrival = (int)generate_exponential(1.5); // tempo entre chegadas
+    cumulative_arrival += inter_arrival;
+
     p.id = id;
-    p.arrival_time = current_time + (int)generate_exponential(2.0);  // λ = 2
-    p.burst_time = (int)generate_exponential(5.0);
-    if (p.burst_time <= 0) p.burst_time = 1; // λ = 5
+    p.arrival_time = cumulative_arrival;
+    p.burst_time = (int)generate_exponential(4.0); // média = 4
+    if (p.burst_time <= 0) p.burst_time = 1;
+
     p.priority = rand() % 10;
     p.remaining_time = p.burst_time;
-    p.deadline = p.arrival_time + 20;
+    p.deadline = p.arrival_time + p.burst_time + 10;
     p.period = 0;
 
     printf("Generated Process %d: chegada=%d, burst=%d, prioridade=%d\n", 
-            p.id, p.arrival_time, p.burst_time, p.priority);
+           p.id, p.arrival_time, p.burst_time, p.priority);
 
     return p;
 }
+
 
 
 void load_processes_from_file(const char* filename, ProcessQueue* queue) {
