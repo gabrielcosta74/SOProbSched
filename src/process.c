@@ -41,16 +41,16 @@ Process generate_random_process(int id, int current_time) {
 
     p.priority = rand() % 10;
     p.remaining_time = p.burst_time;
-    p.deadline = p.arrival_time + p.burst_time + 10;
-    p.period = 0;
 
-    printf("Generated Process %d: chegada=%d, burst=%d, prioridade=%d\n", 
-           p.id, p.arrival_time, p.burst_time, p.priority);
+    // Período entre 5 e 20 unidades de tempo
+    p.period = (rand() % 16) + 5;
+    p.deadline = p.arrival_time + p.period;
+
+    printf("Generated Process %d: chegada=%d, burst=%d, prioridade=%d, periodo=%d, deadline=%d\n", 
+           p.id, p.arrival_time, p.burst_time, p.priority, p.period, p.deadline);
 
     return p;
 }
-
-
 
 void load_processes_from_file(const char* filename, ProcessQueue* queue) {
     FILE* file = fopen(filename, "r");
@@ -59,8 +59,9 @@ void load_processes_from_file(const char* filename, ProcessQueue* queue) {
         return;
     }
     Process p;
-    while (fscanf(file, "%d %d %d %d", &p.id, &p.arrival_time, &p.burst_time, &p.priority) == 4) {
+    while (fscanf(file, "%d %d %d %d %d", &p.id, &p.arrival_time, &p.burst_time, &p.priority, &p.period) == 5) {
         p.remaining_time = p.burst_time;
+        p.deadline = p.arrival_time + p.period;
         add_process(queue, p);
     }
     fclose(file);
